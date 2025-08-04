@@ -1,12 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import {
   Memo,
   MemoFormData,
   MEMO_CATEGORIES,
   DEFAULT_CATEGORIES,
 } from '@/types/memo'
+
+// React MDEditor를 동적 로딩 (SSR 이슈 방지)
+const MDEditor = dynamic(
+  () => import('@uiw/react-md-editor'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[300px] border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+        <div className="text-gray-500">마크다운 편집기를 불러오는 중...</div>
+      </div>
+    )
+  }
+)
 
 interface MemoFormProps {
   isOpen: boolean
@@ -170,26 +184,30 @@ export default function MemoForm({
 
             {/* 내용 */}
             <div>
-              <label
-                htmlFor="content"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 내용 *
               </label>
-              <textarea
-                id="content"
-                value={formData.content}
-                onChange={e =>
-                  setFormData(prev => ({
-                    ...prev,
-                    content: e.target.value,
-                  }))
-                }
-                className="placeholder-gray-400 text-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-                placeholder="메모 내용을 입력하세요"
-                rows={8}
-                required
-              />
+              <div className="border border-gray-300 rounded-lg overflow-hidden">
+                <MDEditor
+                  value={formData.content}
+                  onChange={(val) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      content: val || '',
+                    }))
+                  }
+                  data-color-mode="light"
+                  height={300}
+                  preview="live"
+                  previewOptions={{
+                    className: "markdown-body",
+                    style: { 
+                      backgroundColor: 'transparent',
+                      padding: '1rem'
+                    }
+                  }}
+                />
+              </div>
             </div>
 
             {/* 태그 */}

@@ -26,14 +26,14 @@ export default function Home() {
   const [viewingMemo, setViewingMemo] = useState<Memo | null>(null)
   const [isViewerOpen, setIsViewerOpen] = useState(false)
 
-  const handleCreateMemo = (formData: MemoFormData) => {
-    createMemo(formData)
+  const handleCreateMemo = async (formData: MemoFormData) => {
+    await createMemo(formData)
     setIsFormOpen(false)
   }
 
-  const handleUpdateMemo = (formData: MemoFormData) => {
+  const handleUpdateMemo = async (formData: MemoFormData) => {
     if (editingMemo) {
-      updateMemo(editingMemo.id, formData)
+      await updateMemo(editingMemo.id, formData)
       setEditingMemo(null)
     }
   }

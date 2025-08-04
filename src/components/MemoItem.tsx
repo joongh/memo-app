@@ -21,6 +21,23 @@ export default function MemoItem({ memo, onEdit, onDelete, onView }: MemoItemPro
     })
   }
 
+  // 메모 내용을 미리보기용으로 포맷팅 (개행문자 처리 및 길이 제한)
+  const formatContentPreview = (content: string) => {
+    // 개행문자를 기준으로 첫 번째 줄만 가져오기
+    const lines = content.split('\n').filter(line => line.trim() !== '')
+    const firstLine = lines[0] || ''
+    
+    // 첫 번째 줄이 너무 길면 자르기
+    let preview = firstLine.length > 150 ? firstLine.substring(0, 150) + '...' : firstLine
+    
+    // 추가 줄이 있으면 표시
+    if (lines.length > 1) {
+      preview += preview.endsWith('...') ? '' : '...'
+    }
+    
+    return preview
+  }
+
   const getCategoryColor = (category: string) => {
     const colors = {
       personal: 'bg-blue-100 text-blue-800',
@@ -109,8 +126,8 @@ export default function MemoItem({ memo, onEdit, onDelete, onView }: MemoItemPro
 
       {/* 내용 */}
       <div className="mb-4">
-        <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
-          {memo.content}
+        <p className="text-gray-700 text-sm leading-relaxed">
+          {formatContentPreview(memo.content)}
         </p>
       </div>
 

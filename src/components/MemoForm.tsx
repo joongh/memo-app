@@ -199,6 +199,13 @@ export default function MemoForm({
                   data-color-mode="light"
                   height={300}
                   preview="live"
+                  previewOptions={{
+                    className: "markdown-body",
+                    style: { 
+                      backgroundColor: 'transparent',
+                      padding: '1rem'
+                    }
+                  }}
                 />
               </div>
             </div>
